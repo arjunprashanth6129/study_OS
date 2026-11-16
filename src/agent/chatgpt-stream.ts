@@ -8,7 +8,8 @@ import { capturePreparedBackgroundPayload } from "./background-capture.ts";
 
 const USAGE = "https://chatgpt.com/settings/usage";
 export function chatGPTStreamError(message: string): string {
-	if (/subscription_sharing_usage_limit_exceeded|quota|429/.test(message)) return `ChatGPT plan usage limit reached. Manage usage at ${USAGE}. No API-key fallback was used.`;
+	// study_os (2026-11-16): the backend also reports the limit in prose ("…has reached their Subscription Sharing usage limit…").
+	if (/subscription_sharing_usage_limit_exceeded|usage limit|quota|429/i.test(message)) return `ChatGPT plan usage limit reached. It resets on its own; until then, pick another model in the session's model menu. Manage usage at ${USAGE}. No API-key fallback was used.`;
 	if (/scope|authorization_context|permission/.test(message)) return "ChatGPT plan permission is missing. Reconnect in Providers and authorize plan use. No API-key fallback was used.";
 	if (/expired|invalid_grant|401|invalid_user/.test(message)) return "Your ChatGPT session expired. Reconnect in Providers. No API-key fallback was used.";
 	if (/background|Background/.test(message)) return "ChatGPT background use is off in this app. Enable Allow background use for all ChatGPT accounts in Providers to run this work. No API-key fallback was used.";
@@ -111,6 +112,9 @@ export function chatGPTStream(background: () => boolean, lifecycle?: ChatGPTDisp
 			} catch (err) {
 				if (terminal) return;
 				if (!committed) lifecycle?.noDispatch(await chatGPTDenial(scope, controller, options?.signal?.aborted === true, purpose));
+				// study_os: keep the provider's own reason in the server log; the
+				// learner-facing text below is deliberately generic.
+				if (!signal.aborted) console.error(`[chatgpt] ${logicalModel.id} request failed:`, err instanceof Error ? err.message.slice(0, 2000) : String(err).slice(0, 2000));
 				partial = { ...partial, stopReason: signal.aborted ? "aborted" : "error", errorMessage: chatGPTStreamError(err instanceof Error ? err.message : "") };
 				output.push({ type: "error", reason: partial.stopReason as "error" | "aborted", error: partial });
 			} finally { release(); output.end(); }
