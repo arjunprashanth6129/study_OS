@@ -1,0 +1,16 @@
+study_os
+Copyright (C) 2026 Arjun Prashanth
+
+study_os is a modified version of learnharness by Amos Blomqvist
+(https://github.com/amosblomqvist/learnharness), which is licensed under the
+GNU Affero General Public License, version 3 (AGPL-3.0).
+
+Modifications by Arjun Prashanth, November 2026: renamed the project to
+study_os; replaced the teaching method with an examiner-style study system
+(learner-made notes, blank-page recall and hint-first interrogation); added a
+step timer, a persistent study log with spaced-recall dates, handwritten-photo
+pickup, and multiple-choice quizzes alongside written recall; and other
+changes recorded in this repository's history.
+
+study_os as a whole is distributed under the same license, AGPL-3.0. See the
+LICENSE file for the full text.

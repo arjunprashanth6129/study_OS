@@ -77,4 +77,4 @@ Your chats, study log and study history stay on your machine in `data/`, which i
 
 ## Credit and license
 
-Based on the open-source [learnharness](https://github.com/amosblomqvist/learnharness) by Amos Blomqvist, which is licensed under AGPL-3.0.
+Based on the open-source [learnharness](https://github.com/amosblomqvist/learnharness) by Amos Blomqvist. study_os is a modified version of it and is licensed under the same license, [AGPL-3.0](LICENSE). See [NOTICE](NOTICE) for what was changed.
