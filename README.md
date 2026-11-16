@@ -2,14 +2,13 @@
 
 A rigorous, agentic study system built for the intense syllabus and studies of an Indian high schooler.
 
-It is inspired by [learnharness](https://github.com/amosblomqvist/learnharness) but is not the same thing. It is a different system with a different method, and it is the only system you need to understand and master concepts while remembering key facts and derivations, using scientific study methods.
+It is inspired by [learnharness](https://github.com/amosblomqvist/learnharness). It is a different system with a different method, and it is the only system you need to understand and master concepts while remembering key facts and derivations, using scientific study methods.
 
 ## Method: Write → Recall → Solve
 
-Roughly 40% of each chapter's time is spent with the tutor and 60% solving questions outside the app. There are no AI-written quizzes and no predictions, because reading followed by immediate quizzing doesn't build retention.
+The ideal time to study a topic should be about roughly 40% of the time spent with the AI tutor and 60% solving questions (refer to my [pyq agent](https://github.com/arjunprashanth6129/pyq-agent) to find questions easily). 
 
 Each chapter is taught in blocks:
-
 1. **Read and mark** the source (your textbook PDF).
 2. **Why**: the reasoning behind the idea.
 3. **Full note** and a **write list** with margin cues, which you write by hand.
