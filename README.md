@@ -2,59 +2,48 @@
 
 A rigorous, agentic study system built for the intense syllabus and studies of an Indian high schooler (CBSE Class 12 boards and BITSAT).
 
-It is inspired by [learnharness](https://github.com/amosblomqvist/learnharness), but uses a different method: the AI does not teach you the chapter or write your notes. You do the work; the AI acts as your examiner.
+It is inspired by [learnharness](https://github.com/amosblomqvist/learnharness), but works differently: it does not teach you the chapter or run your study session. You study; the AI is an aide you call on when you need it.
 
-## The idea: you build it, the tutor breaks it
+## The idea: you do the work, the aide checks it
 
 Re-reading and highlighting feel productive but are among the weakest ways to study. Recalling from memory, spacing it over days, and explaining *why* are among the strongest. So in study_os:
 
-- **You** read the textbook, decide what matters, and make your own notes by hand.
-- **The tutor** reads the same chapter so it knows exactly what is in it, then tests what you produced, finds the gaps, and makes you fill them.
-- It never tells you what is important before you have tried. It asks questions instead of giving answers, gives a hint before an answer, and reveals the full answer only after a second miss.
+- **You** read the textbook, decide what matters, make your own notes by hand, and write blank pages from memory.
+- **The aide** does one job when you ask, then waits. When it checks your work it finds the gaps and asks you about them, gives a hint before an answer, and reveals the full answer only after a second miss.
 
-## A study session
+## How to use it
 
-| Part | Share of time | Where | What happens |
-|---|---|---|---|
-| 1. NCERT learning | 40% | In the app | The chunk loop below, chapter by chapter |
-| 2. Questions | 60% | Outside the app | Your teachers' worksheets and past papers, notes closed (find past papers with [pyq agent](https://github.com/arjunprashanth6129/pyq-agent)) |
-| 3. BITSAT extras | Extra | Back in the same session | The tutor teaches what BITSAT asks beyond NCERT, then quizzes you with BITSAT-level multiple-choice questions |
+Start a session with **Study: <chapter>**. The aide finds the chapter's textbook PDF, reads it, splits it into chunks of 2–3 pages (2 when the pages are dense with derivations, mechanisms or formulas), and stops. You study the chunks your own way.
 
-### The chunk loop (Part 1)
+When you need help, type **/** in the message box and pick a command:
 
-The chapter is cut into chunks of 2–3 textbook pages (2 when the pages are dense with derivations, mechanisms or formulas).
+| Command | What it does |
+|---|---|
+| /study | Splits a chapter into 2–3 page chunks, then waits |
+| /check | Checks your blank page (photo or typed): questions on the gaps, hint first |
+| /doubt | Asks what you think first, then explains |
+| /explain | A direct explanation |
+| /quiz | A few board or BITSAT-level questions on a topic, marked strictly |
+| /bitsat | What BITSAT asks beyond NCERT for a chapter, then a short MCQ quiz |
+| /debrief | Questions you got wrong: you diagnose first, then it fixes |
+| /recall | Spaced recall of an earlier chapter: blank page, then the gaps and your weak points |
+| /log | Your open weak points and the chapters due for recall |
 
-1. **Read and note.** You read the pages and make your own notes, timed.
-2. **Blank page.** Book and notes closed, you write everything you remember, then send a photo of the page (or type the key lines).
-3. **Interrogation.** The tutor compares your page with the textbook and asks 3–5 questions:
-   - **gap questions** about what you left out, worded so they don't give the answer away;
-   - **why questions** about the reasoning behind a result, a derivation step or a mechanism;
-   - **one twist**, the same idea in a new situation.
-4. **Hints, then answers.** A miss gets a hint and a second try; the full answer comes only after a second miss.
-5. **Fix your notes.** You add corrections to your own notes in a second colour.
+Solve your teachers' questions outside the app (find past papers with [pyq agent](https://github.com/arjunprashanth6129/pyq-agent)).
 
-At the end of the chapter you write the whole chapter on one page from memory, then your own summary sheet, which the tutor audits.
-
-### What it tests, by subject
+### What it checks, by subject
 
 | Subject | Focus |
 |---|---|
-| Physics | Understanding and applying each concept; every derivation step by step from memory |
+| Physics | Understanding and applying each concept; every derivation step by step |
 | Mathematics | Key formulas and results exactly; the approach to each type of question |
 | Chemistry | The small facts (exceptions, conditions, reagents, named reactions); mechanisms step by step; the reasoning behind trends |
 
-### Around the sessions
-
-- **Warm-up:** each study session starts with 5 minutes on weak points from earlier chapters.
-- **Recall sessions:** a blank-page rewrite of a chapter on day 1, 3, 7, 21 and 45 after studying it.
-- **Debrief:** bring the questions you got wrong; you diagnose the mistake first, then the tutor confirms and fixes it.
-- **Doubts:** the tutor asks what you currently think, then explains from there (or explains directly if you say "just explain").
-
 ## Built-in tools
 
-- **Step timer.** Every step runs on an on-screen countdown that chimes when time is up and asks whether you're done ("Done → next" or "+5 min"). The tutor tracks your real pace and rescales the remaining chunks.
-- **Photo pickup.** Write on paper, AirDrop the photo to the Mac, type "done", and the tutor reads your handwriting. iPhone HEIC photos are converted automatically.
-- **Study log.** Weak points and spaced-recall dates are kept across sessions, so warm-ups and recall sessions test what you actually got wrong.
+- **Photo pickup.** Write on paper, AirDrop the photo to the Mac, type "done", and the aide reads your handwriting. iPhone HEIC photos are converted automatically.
+- **Study log.** Weak points and spaced-recall dates (day 1, 3, 7, 21, 45) are kept across sessions, so recall and quizzes test what you actually got wrong.
+- **Low usage.** The aide only runs when you ask, bundles its work into as few model requests as possible, and reads only the pages it needs.
 
 ## Run it
 

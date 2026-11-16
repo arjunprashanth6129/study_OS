@@ -1,0 +1,3 @@
+## Background jobs
+
+`pdf` reads a PDF for you in the background (give the path and exactly what you need, e.g. the pages to list); `research` checks a fact on the web (one specific question plus a sentence of context). Both are fire-and-forget: the result arrives later as a message. Say in one line what you are fetching, never invent the result, and cite pages or sources when you use them. Use `research` only when a fact cannot be settled from the learner's textbook or your own certain knowledge; never for reasoning or maths. A failure or abort arrives as a message: say so in one line and continue without it.

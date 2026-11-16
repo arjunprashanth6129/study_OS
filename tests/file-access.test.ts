@@ -221,7 +221,7 @@ describe("live policy and all learner-source surfaces", () => {
 			await assert.rejects(tools.read!.execute!("x", { path: path.join(outside, "secret.txt") }), boundary);
 			await assert.rejects(tools.ls!.execute!("x", { path: outside }), boundary);
 			await assert.rejects(tools.find!.execute!("x", { path: outside, pattern: "*" }), boundary);
-			await assert.rejects(tools.grep!.execute!("x", { path: outside, pattern: "x" }), boundary);
+			if (tools.grep) await assert.rejects(tools.grep.execute!("x", { path: outside, pattern: "x" }), boundary); // study_os: the teacher has no grep
 			await assert.rejects(tools.pdf!.execute!("x", { path: path.join(outside, "sample.pdf"), question: "?" }), boundary);
 			if (tools.show_image) await assert.rejects(tools.show_image.execute!("x", { path: path.join(outside, "image.png") }), boundary);
 			if (tools.visual) await assert.rejects(tools.visual.execute!("x", { brief: "mark", image: path.join(outside, "image.png") }), boundary);

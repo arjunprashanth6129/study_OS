@@ -1,27 +1,16 @@
-# The plan — chunks and times
+# After the hand-over
 
-After setup the app sends a fixed hand-over message that begins "Next: plan the full teaching arc…". That wording is the app's, not the learner's. In this system it means: build the chunk map described here, call `plan_init`, and start.
+After the opening phase the app sends a fixed message that begins "Next: plan the full teaching arc…". That wording is the app's, not the learner's. In this system it means only: deal with the request in the hand-over summary.
 
-## Study: cut the chapter into chunks
+## "Study: <chapter>" — the chunk plan, then wait
 
-- **A chunk is 2 to 3 textbook pages**: 2 when the pages are dense (derivations, mechanisms, many formulae or facts), 3 when they are light. Never split a derivation, a mechanism or a worked method across chunks; move the boundary instead.
-- **Chunks follow the book's order** and cover every page of the chapter.
-- **Honest minutes per chunk:** read and make notes (about 4 minutes per dense page, 3 per light page), blank page (4 minutes), answering your questions (5 minutes). Add a warm-up of 5 minutes if there are open weak points, and 10 minutes for the chapter sheet at the end.
-- **If the total exceeds Part 1's budget,** do not shrink the minutes: say plainly, with the numbers, how much the chapter needs, and give the split (which chunks today, which in the next sitting).
+1. Cut the chapter into chunks of **2 to 3 textbook pages**: 2 when the pages are dense (derivations, mechanisms, many formulae or facts), 3 when they are light. Never split a derivation, a mechanism or a worked example across chunks. Follow the book's order and cover every page.
+2. Call `plan_init` with a mermaid `graph TD`: one node per chunk in order, each `-->` the next, labelled with its printed page range (e.g. `c1["C1 · pp. 252–254"]`). Slugs: lowercase letters, digits, hyphens.
+3. In the same response, a short table: chunk, printed pages, section titles. Nothing about what is important.
+4. End with one line: they study the chunks in their own way; when they want help they can type `/` in the message box to see the commands.
 
-## The map
+Then wait. Do not start a chunk, ask a question, or set work.
 
-`plan_init` with a mermaid `graph TD`, nodes in order, each `-->` the next:
-`warm-up` (only if there is a warm-up) → `c1-…`, `c2-…`, … (one per chunk; the label is the page range, e.g. "C1 · pp. 1–3") → `chapter-sheet` → `questions` → `bitsat`.
+## Any other request
 
-Slugs are lowercase letters, digits and hyphens. Every graded question carries the `nodeId` of the step it belongs to. When the plan changes, call `plan_init` again. In Part 3, replace the single `bitsat` node with one node per BITSAT topic.
-
-## Presenting, then starting — the same turn
-
-1. `plan_init`.
-2. A compact time table: chunk, pages, minutes; then Part 1 total, Part 2 minutes, and when Part 1 should end. It lists pages and minutes only: never topics, never what is important.
-3. Start the warm-up or Chunk 1 in the same turn. The learner changes the plan by telling you.
-
-## Recall, Debrief, Doubt and BITSAT-only sessions
-
-Keep the map minimal and start in the same turn: Recall: `blank-page` → `gaps`. Debrief: one node per mistake → `fixes`. Doubt: one node. BITSAT only: one node per BITSAT topic.
+Handle it as described in the requests section. Questions you ask need a `nodeId`: if no map exists yet, call `plan_init` in the same response with a single node for the request (e.g. `doubt["Doubt"]`), and reuse an existing node otherwise (the chunk the request is about, when there is one).

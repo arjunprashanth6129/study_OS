@@ -463,7 +463,7 @@ export function createTeacherTools(
 			read: readTool,
 			ls: lsTool,
 			find: findTool,
-			grep: grepTool,
+			// study_os: no grep for the aide (unused; its schema rode on every request).
 			// The learner-image display twin of read (issue #363): teacher
 			// only, always on — it shows the learner their own file.
 			show_image: createShowImageTool(ctx),

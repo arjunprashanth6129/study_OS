@@ -207,7 +207,7 @@ describe("source access: canonical roots and all tool paths", () => {
 			await assert.rejects(tools.read!.execute!("s", { path: auth }), denied);
 			await assert.rejects(tools.ls!.execute!("s", { path: "~/.ssh" }), denied);
 			await assert.rejects(tools.find!.execute!("s", { path: "~/.ssh", pattern: "*" }), denied);
-			await assert.rejects(tools.grep!.execute!("s", { path: auth, pattern: "x" }), denied);
+			if (tools.grep) await assert.rejects(tools.grep.execute!("s", { path: auth, pattern: "x" }), denied); // study_os: the teacher has no grep
 		}
 		const model = createFauxCore({ tokenSize: { min: 64, max: 64 } }).getModel();
 		await assert.rejects(createReadTool(model).execute!("s", { path: auth }), denied);

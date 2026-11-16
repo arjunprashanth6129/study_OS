@@ -7,6 +7,7 @@ import { PathInput } from "@/components/path-input";
 import { AttachFilesButton } from "@/components/attach-files-button";
 import { useOptionalInteractionLayers } from "./interaction-layers";
 import { isInteractionScopeEligible } from "./plugin-input-focus";
+import { handleMenuKey, matchingCommands, StudyCommandMenu, type StudyCommand } from "./study-commands";
 
 /**
  * The chat composer — content row ONLY (the persistent rounded shell lives in
@@ -157,10 +158,29 @@ export function Composer({
 	};
 	const ownInputRef = useRef<HTMLDivElement>(null);
 	const editorRef = inputRef ?? ownInputRef;
+	// study_os: the "/" command menu.
+	const [menuActive, setMenuActive] = useState(0);
+	const [menuClosedFor, setMenuClosedFor] = useState<string | null>(null);
+	const commands = menuClosedFor === value ? null : matchingCommands(value);
+	const chooseCommand = (command: StudyCommand) => {
+		onChange(command.template);
+		setMenuActive(0);
+		requestAnimationFrame(() => {
+			const editor = editorRef.current;
+			if (!editor) return;
+			editor.focus();
+			const range = document.createRange();
+			range.selectNodeContents(editor);
+			range.collapse(false);
+			const selection = window.getSelection();
+			selection?.removeAllRanges();
+			selection?.addRange(range);
+		});
+	};
 	return (
 		<form
 			data-testid="composer"
-			className="flex items-end gap-1.5 p-1.5"
+			className="relative flex items-end gap-1.5 p-1.5"
 			onSubmit={(e) => {
 				e.preventDefault();
 				act();
@@ -174,6 +194,7 @@ export function Composer({
 				fileInsertion={fileInsertion}
 				onKeyDown={(e) => {
 					if (!isInteractionScopeEligible(e.currentTarget, controller)) return;
+					if (commands && handleMenuKey(e, commands, menuActive, setMenuActive, chooseCommand, () => setMenuClosedFor(value))) return;
 					// Esc ends dictation before anything else Esc might someday mean
 					// here (the dictate decisions: click-again or Esc to stop).
 					// stopPropagation claims the Esc (keyboard wave A): the
@@ -198,6 +219,7 @@ export function Composer({
 				className="field-sizing-content lh-input max-h-48 min-h-10 flex-1 resize-none bg-transparent px-2.5 py-2 outline-none placeholder:text-muted-foreground"
 			/>
 			<AttachFilesButton editorRef={editorRef} />
+			{commands && <StudyCommandMenu commands={commands} active={Math.min(menuActive, Math.max(0, commands.length - 1))} onChoose={chooseCommand} onHover={setMenuActive} />}
 			{/* The button follows the text (owner report 2026-10-03): while
 				 a turn runs WITH text typed it stays the SEND affordance
 				 (click = steer — steering must be clickable, not Enter-only);

@@ -17,6 +17,7 @@ import { SidebarToggle } from "@/components/sidebar";
 import { StatsBar } from "@/components/stats-bar";
 import { OPENING_PROMPT_FAILURE } from "@/components/opening-prompt";
 import { PathInput } from "@/components/path-input";
+import { handleMenuKey, matchingCommands, StudyCommandMenu, type StudyCommand } from "@/components/study-commands";
 import { AttachFilesButton } from "@/components/attach-files-button";
 import { SessionStarter } from "@/components/start-session";
 import type { TurnUsage } from "@/src/core";
@@ -75,6 +76,26 @@ export function Home({
 	 * the keyboard from the stop. Falling edge only; this surface's only
 	 * dictation target IS this textarea, so no case-split is needed. */
 	const topicInputRef = useRef<HTMLDivElement>(null);
+	// study_os: the "/" command menu.
+	const [menuActive, setMenuActive] = useState(0);
+	const [menuClosedFor, setMenuClosedFor] = useState<string | null>(null);
+	const commands = menuClosedFor === topic ? null : matchingCommands(topic);
+	const chooseCommand = (command: StudyCommand) => {
+		topicRef.current = command.template;
+		setTopic(command.template);
+		setMenuActive(0);
+		requestAnimationFrame(() => {
+			const editor = topicInputRef.current;
+			if (!editor) return;
+			editor.focus();
+			const range = document.createRange();
+			range.selectNodeContents(editor);
+			range.collapse(false);
+			const selection = window.getSelection();
+			selection?.removeAllRanges();
+			selection?.addRange(range);
+		});
+	};
 	// Tab navigates INTO the topic composer (owner, keyboard round
 	// 2026-10-06): the only text field on this surface — and home's
 	// composer is its OWN textarea, not the shared Composer component,
@@ -244,7 +265,7 @@ export function Home({
 					{startError && <p role="alert" className="mb-2 text-sm text-destructive">{OPENING_PROMPT_FAILURE}</p>}
 					<form
 						data-attachment-composer=""
-						className="flex items-end gap-1.5 rounded-2xl border bg-card p-1.5 shadow-lg"
+						className="relative flex items-end gap-1.5 rounded-2xl border bg-card p-1.5 shadow-lg"
 					onSubmit={(e) => {
 						e.preventDefault();
 						void start();
@@ -260,6 +281,7 @@ export function Home({
 						defaultDropTarget
 						onKeyDown={(e) => {
 							if (!isInteractionScopeEligible(e.currentTarget, controller)) return;
+							if (commands && handleMenuKey(e, commands, menuActive, setMenuActive, chooseCommand, () => setMenuClosedFor(topic))) return;
 							// Esc ends dictation (the dictate decisions: click-again or
 							// Esc) — stopPropagation claims it (keyboard wave A) so
 							// the window chain doesn't also abort a turn.
@@ -280,6 +302,7 @@ export function Home({
 						className="field-sizing-content lh-input max-h-48 min-h-10 flex-1 resize-none bg-transparent px-2.5 py-2 outline-none placeholder:text-muted-foreground"
 					/>
 					<AttachFilesButton editorRef={topicInputRef} />
+					{commands && <StudyCommandMenu commands={commands} active={Math.min(menuActive, Math.max(0, commands.length - 1))} onChoose={chooseCommand} onHover={setMenuActive} />}
 					{/* No tooltip on the start square — the ↵ glyph is the
 					    affordance (owner, subtlety round 2026-09-25). */}
 					<button

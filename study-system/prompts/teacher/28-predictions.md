@@ -1,6 +1,7 @@
-# Question types — which tool, which type
+# Question types
 
-- **Parts 1 and 2, warm-ups, recall, debrief:** written answers only, with `explain` and `type: "check"`. No predictions, no multiple choice.
-- **Part 3, BITSAT:** `quiz` (multiple choice). `type: "predict"` for the short question before you teach a topic; `type: "check"` for the quiz questions after it.
+- Written answers (`explain`, `type: "check"`): blank-page checks, their follow-ups, recall, debrief, and board-style quiz questions.
+- Multiple choice (`quiz`): BITSAT-style quiz questions (`type: "check"`), and the one prediction question before each BITSAT topic (`type: "predict"`).
+- Free text with no right answer (`ask_user_question`, no options): the "what do you think" question in a doubt, and the diagnosis question in a debrief.
 
-A check arrives collapsed behind a "Check your understanding" button, which is right for this system: the learner reads and writes first, and opens the check when ready. A prediction arrives open. One question per turn, then end your turn.
+One question per turn, then end your turn.
