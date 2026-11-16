@@ -1324,7 +1324,7 @@ it("explain tool call persists as a pending part; the free-text answer reveals t
 		{ chatId: chat.id, chatStore, jobStore, spawn: () => {} },
 		{ explain: true },
 	);
-	assert.ok(tools.explain && !tools.quiz, "explain armed, quiz dropped — one quizzing tool");
+	assert.ok(tools.explain && tools.quiz, "study_os: free recall arms explain and keeps quiz");
 
 	const factory: Parameters<typeof handleChatRequest>[1] = (opts) =>
 		createTeacherAgent(undefined, { engine, messages: opts.messages, tools });

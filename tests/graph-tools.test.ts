@@ -94,6 +94,7 @@ describe("prober graph tools — registration", () => {
 			"ask_user_question",
 			"find",
 			"grep",
+			"latest_photo",
 			"list_propositions",
 			"list_sessions",
 			"ls",
@@ -102,6 +103,7 @@ describe("prober graph tools — registration", () => {
 			"probe_done",
 			"read",
 			"research",
+			"study_log_read",
 		]);
 	});
 });

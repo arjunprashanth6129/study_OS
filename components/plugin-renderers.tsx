@@ -105,12 +105,16 @@ function isToolState(state: unknown): state is PluginToolRenderProps["state"] {
 /** Called by chat's default tool branch AFTER its explicit question/dock
  * handling. Built-in cards and the hidden settled plan call remain exclusive;
  * only the generic fallback slot is extensible by plugins. */
+const STUDY_TOOLS = new Set(["start_timer", "study_log_read", "weak_points_add", "weak_points_fixed", "chapter_studied", "latest_photo"]);
+
 export function ToolPartRenderer({ part }: { part: LhViewPart }) {
 	// Attempts/unreadable metadata must never fall through to raw payloads or
 	// validator error text, including when the renderer is missing.
 	if (part.pluginQuestion) return <p role="status" className="text-xs text-muted-foreground">Question unavailable</p>;
 	const toolName = part.type.slice("tool-".length);
 	const Builtin = Object.hasOwn(artifactRenderers, toolName) ? artifactRenderers[toolName] : undefined;
+	// study_os: the study tools are background bookkeeping; the timer has its own on-screen control.
+	if (STUDY_TOOLS.has(toolName)) return null;
 	const reserved = Builtin || toolName === "plan_init" || (QUESTION_TOOLS as readonly string[]).includes(toolName);
 	if (reserved && part.state === "input-streaming") return <LiveToolCard part={part as ArtifactPartProps["part"]} />;
 	if (Builtin) return <Builtin part={part as ArtifactPartProps["part"]} />;

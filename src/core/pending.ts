@@ -160,6 +160,12 @@ export function findPendingToolCall(messages: UIMessage[], authority?: string | 
  * renders it as the quiet transcript shimmer.
  */
 const ACTIVITY_LABELS: Record<string, string> = {
+	start_timer: "Starting the timer…",
+	study_log_read: "Reading your study log…",
+	weak_points_add: "Logging weak points…",
+	weak_points_fixed: "Updating your study log…",
+	chapter_studied: "Updating your study log…",
+	latest_photo: "Looking at your photo…",
 	read: "Reading a file…",
 	ls: "Listing a directory…",
 	find: "Finding files…",

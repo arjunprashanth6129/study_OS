@@ -29,3 +29,6 @@ xai-credentials.json*
 
 # dev-fresh launcher scratch (fresh-user sim): disposable per launch
 .fresh-data/
+
+# Any copy of the subscription sign-in files (e.g. Finder duplicates "chatgpt-credentials 2.json")
+/*credentials*.json*

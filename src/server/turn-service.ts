@@ -56,6 +56,20 @@ export class TurnPersistenceError extends Error {
  * Returns the stamped new messages (usage provenance reads them). Throws
  * TurnPersistenceError on failure so the runner can report it before DONE.
  */
+/** study_os (2026-11-16): a turn whose assistant messages carry no text and no
+ * tool call showed the learner nothing (observed: an empty ChatGPT reply). Save
+ * its last reply as failed so the normal Retry is offered instead of silence. */
+export const EMPTY_TURN_MESSAGE = "The tutor's reply came back empty. Press Retry to ask again.";
+export function markEmptyTurnFailed(messages: LhMessage[]): void {
+	const assistants = messages.filter((m) => m.role === "assistant") as Extract<LhMessage, { role: "assistant" }>[];
+	const last = assistants[assistants.length - 1];
+	if (!last || last.stopReason !== "stop") return;
+	const visible = assistants.some((m) => m.content.some((c) => c.type === "toolCall" || (c.type === "text" && c.text.trim().length > 0)));
+	if (visible) return;
+	last.stopReason = "error";
+	last.errorMessage = EMPTY_TURN_MESSAGE;
+}
+
 export function persistTurn(
 	chatStore: ChatStore,
 	chatId: string,
@@ -79,6 +93,7 @@ export function persistTurn(
 			}
 			stamped.push(message.id ? message : ({ ...message, id: newMessageId() } as LhMessage));
 		}
+		markEmptyTurnFailed(stamped);
 		const tree = record.tree;
 		const blocks = planBlocksFor(record.messages, stamped, tree, [
 			...record.messages,
