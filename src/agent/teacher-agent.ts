@@ -62,7 +62,7 @@ export const CONVERSATION_TOOL_NAMES = Object.freeze([
 	...QUESTION_TOOLS, ...TOGGLEABLE_TOOLS, "probe_done", "read", "ls", "find", "grep",
 	"plan_init", "list_sessions", "list_propositions", "problem", "conclude", sendToUserTool.name,
 	// study_os (2026-11-16): study tools.
-	"start_timer", "study_log_read", "weak_points_add", "weak_points_fixed", "chapter_studied", "latest_photo",
+	"study_log_read", "weak_points_add", "weak_points_fixed", "chapter_studied", "latest_photo",
 ] as const);
 
 // P2 (2026-09-19): segment discovery + override resolution live in ONE

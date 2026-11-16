@@ -123,7 +123,6 @@ import {
 	questionNeedsReveal,
 } from "@/src/core";
 import { ReadingThinkingField } from "@/components/reading-thinking";
-import { StudyTimer } from "@/components/study-timer";
 import { currentUserThinkingOpen, setAllUserThinkingOpen } from "@/components/thinking-block";
 
 /** One width for everything: transcript, cards, and the bottom blob share this column. */
@@ -2034,7 +2033,6 @@ export function Chat({
 				    height morph (typing, a question growing the band, the
 				    fold) and NEVER overlaps the composer. */}
 				<DockOverlay
-					studyTimer={<StudyTimer messages={messages} />}
 					viewReader={inputViewReader}
 					viewTargets={surfaceTarget ? { text: textTarget()!, answer: builtinTarget, thinking: thinkingTarget(), pluginQuestion: pluginQuestionTarget(), pluginProblem: pluginProblemTarget() } : undefined}
 					pending={pending}
@@ -2407,7 +2405,6 @@ export function DockOverlay({
 	dictationCancel,
 	setupCta,
 	queuedSteers,
-	studyTimer,
 }: {
 	viewReader?: SessionInputViewReader;
 	viewTargets?: SessionViewTargets;
@@ -2480,7 +2477,6 @@ export function DockOverlay({
 	/** The queued-steer indicator's lines (composer steering, 2026-10-03):
 	 *  already filtered by visibleQueuedSteers — only undrained steers. */
 	queuedSteers: QueuedSteerLine[];
-	studyTimer?: React.ReactNode;
 	/** The persistent setup CTA (BYOK, owner 2026-09-22): the same pill
 	 *  home and /chat/new carry, above the composer while slots are unset. */
 	setupCta?: React.ReactNode;
@@ -2946,7 +2942,6 @@ export function DockOverlay({
 					{/* The stats row: beneath the composer/question shell, not
 					    flush to the screen bottom — static height, outside the
 					    morphing shell so it never joins a height animation. */}
-					{studyTimer}
 					<StatsBar
 						turns={turns}
 						contextTokens={contextTokens}

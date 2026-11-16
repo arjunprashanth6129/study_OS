@@ -295,10 +295,10 @@ describe("tool toggles (core/pending.ts + factories)", () => {
 			spawn: () => {},
 		};
 		const full = Object.keys(createTeacherTools(ctx)).sort();
-		assert.deepEqual(full, ["ask_user_question", "chapter_studied", "demo", "find", "grep", "latest_photo", "ls", "pdf", "plan_init", "quiz", "read", "research", "show_image", "start_timer", "study_log_read", "visual", "weak_points_add", "weak_points_fixed"]);
+		assert.deepEqual(full, ["ask_user_question", "chapter_studied", "demo", "find", "grep", "latest_photo", "ls", "pdf", "plan_init", "quiz", "read", "research", "show_image", "study_log_read", "visual", "weak_points_add", "weak_points_fixed"]);
 
 		const noResearch = Object.keys(createTeacherTools(ctx, { research: false })).sort();
-		assert.deepEqual(noResearch, ["ask_user_question", "chapter_studied", "demo", "find", "grep", "latest_photo", "ls", "pdf", "plan_init", "quiz", "read", "show_image", "start_timer", "study_log_read", "visual", "weak_points_add", "weak_points_fixed"]);
+		assert.deepEqual(noResearch, ["ask_user_question", "chapter_studied", "demo", "find", "grep", "latest_photo", "ls", "pdf", "plan_init", "quiz", "read", "show_image", "study_log_read", "visual", "weak_points_add", "weak_points_fixed"]);
 
 		// absent = enabled: an empty record and undefined behave identically
 		assert.deepEqual(
@@ -308,7 +308,7 @@ describe("tool toggles (core/pending.ts + factories)", () => {
 		);
 
 		// study_os (2026-11-16): free recall arms explain and keeps quiz (BITSAT quizzes).
-		const freeFull = ["ask_user_question", "chapter_studied", "demo", "explain", "find", "grep", "latest_photo", "ls", "pdf", "plan_init", "quiz", "read", "research", "show_image", "start_timer", "study_log_read", "visual", "weak_points_add", "weak_points_fixed"];
+		const freeFull = ["ask_user_question", "chapter_studied", "demo", "explain", "find", "grep", "latest_photo", "ls", "pdf", "plan_init", "quiz", "read", "research", "show_image", "study_log_read", "visual", "weak_points_add", "weak_points_fixed"];
 		assert.deepEqual(Object.keys(createTeacherTools(ctx, { explain: true })).sort(), freeFull);
 		assert.deepEqual(
 			Object.keys(createTeacherTools(ctx, { explain: true, research: false })).sort(),

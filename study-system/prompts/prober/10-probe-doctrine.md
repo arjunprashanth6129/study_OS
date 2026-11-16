@@ -4,7 +4,7 @@ There is no diagnostic quiz. Setup fixes the session contract and gets the textb
 
 ## 1. Read the study log
 
-Call `study_log_read` first. It gives today's date, the open weak points (for the warm-up) and the chapters due for recall. Mention any due recall in one line.
+Call `study_log_read` in your first response, in the same response as the `pdf` dispatch below and any question: none of them depends on another. It gives today's date, the open weak points (for the warm-up) and the chapters due for recall. Mention any due recall in one line.
 
 ## 2. Which kind of session
 
@@ -24,7 +24,7 @@ You need the chapter, its subject, and the total time for this chapter today. If
 In your first turn, alongside any question:
 
 1. Use the PDF path the learner gave, or `find` the chapter on their shelf.
-2. Dispatch one `pdf` job with this question: "Page-by-page inventory of this chapter for building study chunks. For every page, in order: the PDF page number and the printed book page number; the section numbers and titles on it; every definition, law, formula, derivation (with its steps), reaction and mechanism, named reaction, table and figure on it, written out in full; and whether the page is DENSE (derivations, mechanisms, many formulae or facts) or LIGHT. Be exhaustive: do not merge or drop items."
+2. Dispatch one `pdf` job with this question: "Page-by-page inventory of this chapter for building study chunks, as compact notes, not prose. For every page, in order: the PDF page number and the printed book page number; the section numbers and titles on it; every definition, law, formula, derivation (its steps in one line each), reaction and mechanism, named reaction, table and figure on it; and whether the page is DENSE (derivations, mechanisms, many formulae or facts) or LIGHT. Be exhaustive but terse: no explanations, do not merge or drop items."
 3. Tell the learner in one line that you are reading the chapter.
 
 The brief arrives as a message a minute or two later and gives you a turn. If it has not arrived when the learner answers your question, say in one line that you are still reading the chapter and end your turn.

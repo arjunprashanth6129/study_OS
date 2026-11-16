@@ -1,7 +1,7 @@
 /**
- * study_os study tools (local addition, 2026-11-16): the step timer, the
- * cross-session weak-point log with spaced-recall dates, and photo pickup
- * for handwritten pages. All local; none of them makes a model call.
+ * study_os study tools (local addition, 2026-11-16): the cross-session
+ * weak-point log with spaced-recall dates, and photo pickup for handwritten
+ * pages. All local; none of them makes a model call.
  */
 import { execFile } from "node:child_process";
 import * as fs from "node:fs";
@@ -11,82 +11,13 @@ import { promisify } from "node:util";
 import { Type } from "typebox";
 import type { AgentTool } from "@earendil-works/pi-agent-core";
 import { PATHS } from "../../../config.ts";
-import type { ChatStore } from "../../core/ports.ts";
 import { detectSupportedImageMimeType, processImage } from "../image-processing/index.ts";
 import { serverExecute, type ImageFileResult } from "../tool-execute.ts";
 
 const run = promisify(execFile);
 
-// ─── step timer ──────────────────────────────────────────────────────────────
-
-export const START_TIMER_TOOL = "start_timer";
-
-const timerInput = Type.Object({
-	steps: Type.Array(
-		Type.Object({
-			label: Type.String({ minLength: 1, description: "What the learner does in this step, e.g. 'Read and note pp. 4–6'." }),
-			minutes: Type.Integer({ minimum: 1, maximum: 240, description: "Minutes for this step." }),
-		}),
-		{ minItems: 1, maxItems: 6, description: "The steps in order. The first starts now; each next one starts when the learner marks the previous one done." },
-	),
-});
-
-export interface TimerStep { label: string; minutes: number }
-export interface TimerOutput {
-	startedAt: number;
-	steps: TimerStep[];
-	now: string;
-	sessionMinutes: number;
-	previous: { steps: string; plannedMinutes: number; actualMinutes: number } | null;
-}
-
 function localTime(ms: number): string {
 	return new Date(ms).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
-}
-
-/** The latest earlier start_timer call in this session and its recorded start. */
-function previousTimer(store: ChatStore, chatId: string): { steps: TimerStep[]; startedAt: number } | null {
-	const record = store.getChat(chatId);
-	if (!record) return null;
-	for (let i = record.messages.length - 1; i >= 0; i--) {
-		const message = record.messages[i] as { role?: string; toolName?: string; details?: unknown };
-		if (message.role !== "toolResult" || message.toolName !== START_TIMER_TOOL) continue;
-		const details = message.details as Partial<TimerOutput> | null;
-		if (details && typeof details.startedAt === "number" && Array.isArray(details.steps)) return { steps: details.steps, startedAt: details.startedAt };
-	}
-	return null;
-}
-
-export function timerResult(steps: TimerStep[], now: number, sessionStart: number | null, previous: { steps: TimerStep[]; startedAt: number } | null): TimerOutput {
-	return {
-		startedAt: now,
-		steps,
-		now: localTime(now),
-		sessionMinutes: sessionStart === null ? 0 : Math.max(0, Math.round((now - sessionStart) / 60_000)),
-		previous: previous
-			? {
-				steps: previous.steps.map((s) => `${s.label} (${s.minutes} min)`).join(", "),
-				plannedMinutes: previous.steps.reduce((sum, s) => sum + s.minutes, 0),
-				actualMinutes: Math.max(0, Math.round((now - previous.startedAt) / 60_000)),
-			}
-			: null,
-	};
-}
-
-export function createStartTimerTool(ctx: { chatId: string; chatStore: ChatStore }): AgentTool<typeof timerInput> {
-	return {
-		name: START_TIMER_TOOL,
-		label: START_TIMER_TOOL,
-		description:
-			"Start the learner's on-screen countdown for the next step(s) of work. The first step starts now; when a step's time is up the learner hears a chime and is asked whether they are done, and marking it done starts the next step. " +
-			"The result tells you the current time, minutes since the session began, and how long the previous timer's steps actually took compared with the plan. Call it before you write the message that sets the work, so you can mention the timing.",
-		parameters: timerInput,
-		execute: serverExecute(START_TIMER_TOOL, timerInput, ({ steps }) => {
-			const record = ctx.chatStore.getChat(ctx.chatId);
-			const sessionStart = record?.createdAt ? Date.parse(record.createdAt) : null;
-			return timerResult(steps, Date.now(), Number.isFinite(sessionStart) ? sessionStart : null, previousTimer(ctx.chatStore, ctx.chatId));
-		}),
-	};
 }
 
 // ─── weak-point log and spaced recall ────────────────────────────────────────

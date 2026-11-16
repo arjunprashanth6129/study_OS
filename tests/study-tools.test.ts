@@ -4,21 +4,10 @@ import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
 import { describe, it } from "node:test";
-import { createStudyLogTools, nextRecall, recentPhotos, studyLogPath, timerResult } from "../src/agent/tools/study.ts";
+import { createStudyLogTools, nextRecall, recentPhotos, studyLogPath } from "../src/agent/tools/study.ts";
 
 const exec = async (tool: { execute: (...args: never[]) => unknown }, input: unknown) =>
 	(await (tool.execute as (id: string, input: unknown) => Promise<{ details: unknown }>)("t", input)).details;
-
-describe("timerResult", () => {
-	it("reports session minutes and how long the previous steps really took", () => {
-		const now = Date.UTC(2026, 10, 16, 10, 0);
-		const r = timerResult([{ label: "Read", minutes: 15 }], now, now - 40 * 60_000, { steps: [{ label: "Read", minutes: 15 }, { label: "Blank page", minutes: 4 }], startedAt: now - 25 * 60_000 });
-		assert.equal(r.startedAt, now);
-		assert.equal(r.sessionMinutes, 40);
-		assert.deepEqual(r.previous, { steps: "Read (15 min), Blank page (4 min)", plannedMinutes: 19, actualMinutes: 25 });
-		assert.equal(timerResult([{ label: "x", minutes: 1 }], now, null, null).previous, null);
-	});
-});
 
 describe("study log", () => {
 	const dir = fs.mkdtempSync(path.join(os.tmpdir(), "study-log-"));

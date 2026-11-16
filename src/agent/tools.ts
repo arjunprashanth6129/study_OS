@@ -24,7 +24,7 @@ import { lsTool } from "./tools/ls.ts";
 import { findTool } from "./tools/find.ts";
 import { grepTool } from "./tools/grep.ts";
 import { createShowImageTool } from "./tools/show-image.ts";
-import { createLatestPhotoTool, createStartTimerTool, createStudyLogTools } from "./tools/study.ts";
+import { createLatestPhotoTool, createStudyLogTools } from "./tools/study.ts";
 import { healToolRecord } from "./tools/heal.ts";
 import type { GraphStore } from "../core/ports.ts";
 
@@ -467,8 +467,7 @@ export function createTeacherTools(
 			// The learner-image display twin of read (issue #363): teacher
 			// only, always on — it shows the learner their own file.
 			show_image: createShowImageTool(ctx),
-			// study_os: step timer, study log, photo pickup.
-			start_timer: createStartTimerTool(ctx),
+			// study_os: study log, photo pickup.
 			...createStudyLogTools(),
 			latest_photo: createLatestPhotoTool(),
 			...planTools(ctx),
