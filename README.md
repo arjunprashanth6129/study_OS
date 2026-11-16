@@ -33,4 +33,4 @@ Then choose your models in Settings. The tutor behaviour is set by prompt overri
 
 ## Credit and license
 
-Built on the open-source learnharness by Amos Blomqvist. Licensed under AGPL-3.0, see [LICENSE](LICENSE).
+Built on the open-source learnharness by Amos Blomqvist, which is licensed under AGPL-3.0. See [LICENSE](LICENSE).
